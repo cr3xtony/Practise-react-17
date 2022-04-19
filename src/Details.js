@@ -1,11 +1,17 @@
 import { useParams } from "react-router-dom";
 import { Component } from "react";
+import Carousel from "./Carousel";
+import ErrorBoundary from "./ErrorBoundary";
+import ThemeContext from "./ThemeContext";
+import Modal from "./Modal";
 
 class Details extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { loading: true };
-  }
+  // constructor(props) {
+  //   super(props);
+  //   this.state = { loading: true };
+  // }
+  //by adding babel plugin
+  state = { loading: true, showModal: false };
 
   async componentDidMount() {
     const res = await fetch(
@@ -17,20 +23,43 @@ class Details extends Component {
     this.setState({ loading: false, ...json.pets[0] });
   }
 
+  toggleModal = () => this.setState({ showModal: !this.state.showModal });
+
   render() {
     if (this.state.loading) {
       return <h2>Loading...</h2>;
     }
-    const { animal, breed, city, state, description, name } = this.state;
+    const { animal, breed, city, state, description, name, images, showModal } =
+      this.state;
+    // throw new Error("fuck");
     return (
       <div className="details">
+        <Carousel images={images} />
         <div>
           <h1>{name}</h1>
           <h2>
             {animal} - {breed} - {city} - {state}
           </h2>
-          <button>Adopt {name}</button>
+          <ThemeContext.Consumer>
+            {([theme]) => (
+              <button
+                onClick={this.toggleModal}
+                style={{ backgroundColor: theme }}
+              >
+                Adopt {name}
+              </button>
+            )}
+          </ThemeContext.Consumer>
           <p>{description}</p>
+          {showModal ? (
+            <Modal>
+              <h1>Would you like to adopt {name}</h1>
+              <div className="buttons">
+                <a href="https://bit.ly/pet-adopt">Yes</a>
+                <button onClick={this.toggleModal}>No</button>
+              </div>
+            </Modal>
+          ) : null}
         </div>
       </div>
     );
@@ -39,7 +68,11 @@ class Details extends Component {
 
 const WrappedDetails = () => {
   const params = useParams();
-  return <Details params={params} />;
+  return (
+    <ErrorBoundary>
+      <Details params={params} />;
+    </ErrorBoundary>
+  );
 };
 
 export default WrappedDetails;
