@@ -26,8 +26,9 @@ const SearchParams = () => {
   }
   console.log(breeds);
   return (
-    <div className="search-params">
+    <div className="my-0 mx-auto w-11/12">
       <form
+        className="p-10 mb-10 rounded-lg bg-gray-200 shadow-lg flex flex-col justify-center items-center"
         onSubmit={(e) => {
           e.preventDefault();
           requestPets();
@@ -36,15 +37,18 @@ const SearchParams = () => {
         <label htmlFor="location">
           Location
           <input
+            type="text"
             id="location"
             value={location}
             placeholder="Location"
             onChange={(e) => updateLocation(e.target.value)}
+            className="w-60 mb-5 block"
           />
         </label>
         <label htmlFor="animal">
           Animal
           <select
+            className="w-60 mb-5 block"
             id="animal"
             value={animal}
             onChange={(e) => {
@@ -67,6 +71,7 @@ const SearchParams = () => {
         <label htmlFor="breed">
           Breed
           <select
+            className="w-60 mb-5 block disabled:opacity-40"
             disabled={!breeds.length}
             id="breed"
             value={breed}
@@ -81,19 +86,28 @@ const SearchParams = () => {
             ))}
           </select>
         </label>
-        <label htmlFor="theme">Theme</label>
-        <select
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          onBlur={(e) => setTheme(e.target.value)}
+        <label htmlFor="theme">
+          Theme
+          <select
+            className="w-60 mb-5 block"
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            onBlur={(e) => setTheme(e.target.value)}
+          >
+            <option value="blue">BLUE</option>
+            <option value="red">RED</option>
+            <option value="green">GREEN</option>
+            <option value="yellow">YELLOW</option>
+            <option value="pink">PINK</option>
+          </select>
+        </label>
+
+        <button
+          className="rounded px-6 py-2 text-white hover:opacity-70 border-none"
+          style={{ backgroundColor: theme }}
         >
-          <option value="blue">BLUE</option>
-          <option value="red">RED</option>
-          <option value="green">GREEN</option>
-          <option value="yellow">YELLOW</option>
-          <option value="pink">PINK</option>
-        </select>
-        <button style={{ backgroundColor: theme }}>Submit</button>
+          Submit
+        </button>
       </form>
       <Results pets={pets} />
     </div>
